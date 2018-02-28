@@ -1,5 +1,5 @@
 -module(storage).
--export([new/0, add/3, delete/2, find/2, is_defined/2]).
+-export([new/0, add/3, delete/2, find/2, is_defined/2,find_even/1,print_x/1,reminder/1,find_even_tial_recursive/2]).
 
 new() ->
     [].
@@ -24,6 +24,38 @@ find(Key, Storage) ->
 is_defined(Key, Storage) ->
     proplists:is_defined(Key, Storage).
 
+% find even number from a list - normal recursive
+find_even([])->
+	[];
+find_even([H|T])->
+	case H rem 2 == 0 of 
+		true -> 
+			[H|find_even(T)] ;
+		false -> 
+			find_even(T)
+	end.
+
+print_x(X) ->
+	X.
+
+reminder(N) -> N rem 2.
+
+% find even number from a list - tail recursive
+
+find_even_tial_recursive(N,0) ->
+	find_even_tial_recursive(N,[]);
+ 
+find_even_tial_recursive([],Acc) ->
+	Acc;
+
+find_even_tial_recursive([H|T],Acc) ->
+	case H rem 2 == 0 of 
+		true -> 
+			find_even_tial_recursive(T,[H|Acc]);
+		false -> 
+			find_even(T)
+	end.
+
 %% is_defined(Key, Storage) ->
 %%     find(Key, Storage) /= [].
 
@@ -45,4 +77,4 @@ is_defined(Key, Storage) ->
 %%     delete(Key, Storage);
 %% delete(Key, [Pair | Storage]) ->
 %%     [Pair | delete(Key, Storage)].
-    
+   
