@@ -41,7 +41,6 @@ print_x(X) ->
 reminder(N) -> N rem 2.
 
 % find even number from a list - tail recursive
-
 find_even_tail_recursive(N) ->
 	find_even_tail_recursive(N,[]).
 
@@ -60,30 +59,3 @@ find_even_tail_recursive([H|T],Acc) ->
 element_of_list_in_tuple(L) ->
 	%L = [{input_packets,122},{output_packets,33},{input_packets,123},{input_packets,152}],
 	[ Value || {Packet,Value}<-L , Packet==input_packets].
-
-
-
-
-
-%% is_defined(Key, Storage) ->
-%%     find(Key, Storage) /= [].
-
-%% is_defined(_, []) ->
-%%     false;
-%% is_defined(Key, [{Key, _} | _] ) ->
-%%     true;
-%% is_defined(Key, [_ | T]) ->
-%%     is_defined(Key, T).
-
-
-%% delete(Key, Storage) ->
-%%     [{K, V} || {K, V} <- Storage, K /= Key].
-                
-
-%% delete(_, []) ->
-%%     [];
-%% delete(Key, [{Key, _} | Storage]) ->
-%%     delete(Key, Storage);
-%% delete(Key, [Pair | Storage]) ->
-%%     [Pair | delete(Key, Storage)].
-   
