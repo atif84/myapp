@@ -6,8 +6,8 @@
                  exercise_05/1,
                  exercise_06/2,
                  recurssion/1,
-				 exercise_07/2,
-		 		 exercise_08/2,
+		 exercise_07/2,
+		 exercise_08/2,
                  add_one_tail_recurssion/1
                 ]).
 
