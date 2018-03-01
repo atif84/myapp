@@ -15,12 +15,13 @@ exercise_01(Input_tuple) ->
     tuple_to_list(Input_tuple).
 
 exercise_02(L) ->
-    [ X+1 || X <- L ].
+    [ X + 1 || X <- L ].
 
 exercise_03(L) ->
     [ X || X <- L, X rem 2 == 0 ].
 
-%%% should try using partition to avoid double loop check partition/2 {satisfying condition, unsatified list}
+%%% should try using partition to avoid traversing the list twice
+%%% check lists:partition/2 -> {satisfyingList, unsatifyingList}
 exercise_04(L) ->
     {[ X || X <- L, X rem 2 == 0 ],
      [ X || X <- L, X rem 2 /= 0 ]}.
@@ -38,23 +39,24 @@ exercise_06(Char, String)->
 %%% add 1 in the given list using recursion
 recurssion([])->
     [];
-recurssion([H|T]) ->
-    [H+1|recurssion(T)].
+recurssion([H | T]) ->
+    [ H+1 | recurssion(T)].
 
 %%% add 1 in a list using tail recursive.
 add_one_tail_recurssion(L) ->
-    add_one_tail_recurssion(L,[]).
+    add_one_tail_recurssion(L, []).
 
-add_one_tail_recurssion([],Acc) ->
-    Acc;
-
-add_one_tail_recurssion([H|T],Acc) ->
-    lists:reverse(add_one_tail_recurssion(T,[H+1|Acc])).
+%%% Reverse the end result.
+%%% It won't work otherwise.
+add_one_tail_recurssion([], Acc) ->
+    lists:reverse(Acc);
+add_one_tail_recurssion([H | T], Acc) ->
+    add_one_tail_recurssion(T, [H + 1 | Acc]).
 
 exercise_07(X, L) ->
     case lists:member(X, L) of
         false ->
-            [X|L];
+            [X | L];
         true ->
             L
     end.
