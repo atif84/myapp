@@ -15,5 +15,5 @@ calc_numeral(N, StrNumeral, C) ->
     if Diff >= 0  ->
 	    calc_numeral(Diff, string:concat(StrNumeral, Y), 1);
        true -> 
-	    calc_numeral(N, StrNumeral, C+1)
+	    calc_numeral(N, StrNumeral, C + 1)
     end.
