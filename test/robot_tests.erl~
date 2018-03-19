@@ -59,7 +59,7 @@ control_return_robot_and_input_multiple_instuctions_test() ->
 
 control_return_robot_and_input_multiple_instuctions_with_space_test() ->
     L = robot:control({{0, 0}, north}, " rrll"),
-    ?assertEqual({{0,0}, north}, L).
+    ?assertEqual({{0,0}, north], L).
 
 control_return_robot_and_input_multiple_instuctions_rlfb_test() ->
     L = robot:control({{0,0}, north}, "rrllffbff"),
