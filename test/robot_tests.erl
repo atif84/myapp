@@ -14,35 +14,35 @@ get_new_direction_from_proplist_test() ->
     ?assertEqual(north, L).
 
 control_move_forward_east_test() ->
-    C = robot:move_forward({0, 6}, east),
+    C = robot:move_forward({{0, 6}, east}),
     ?assertEqual({1, 6}, C).
 
 control_move_forward_west_test() ->
-    C = robot:move_forward({0,0}, west),
+    C = robot:move_forward({{0, 0}, west}),
     ?assertEqual({-1, 0},C).
 
 control_move_forward_north_test() ->
-    C = robot:move_forward({0, 0}, north),
+    C = robot:move_forward({{0, 0}, north}),
     ?assertEqual({0, 1}, C).
 
 control_move_forward_south_test() ->
-    C = robot:move_forward({0, 0}, south),
+    C = robot:move_forward({{0, 0}, south}),
     ?assertEqual({0, -1}, C).
 
 control_move_backward_east_test() ->
-    C = robot:move_backward({0, 6}, east),
+    C = robot:move_backward({{0, 6}, east}),
     ?assertEqual({-1, 6}, C).
 
 control_move_backward_west_test() ->
-    C = robot:move_backward({0,0}, west),
+    C = robot:move_backward({{0, 0}, west}),
     ?assertEqual({1, 0}, C).
 
 control_move_backward_north_test() ->
-    C = robot:move_backward({0,0}, north),
+    C = robot:move_backward({{0, 0}, north}),
     ?assertEqual({0, -1}, C).
 
 control_move_back_south_test() ->
-    C = robot:move_backward({-10,-5}, south),
+    C = robot:move_backward({{-10, -5}, south}),
     ?assertEqual({-10, -4}, C).
 
 control_move_forward_AND_backward_test_control_test() ->
