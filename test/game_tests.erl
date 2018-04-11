@@ -25,17 +25,33 @@ calculate_score__with_spare_bonus_test() ->
     N = game:calc_score([5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5]),
     ?assertEqual(155, N).
 
-%% convert_string_to_list_without_pipe_test() ->
-%%    N = game:inputformatter("X|1-|5/"),
-%%    ?assertEqual(["X","1","_","5","/"], N).
 
-%% convert_string_to_list_without_pipe_with_X_test() ->
-%%     N = game:inputformatter("X|X|X|X|X|X|X|X|X|X||XX"),
-%%     ?assertEqual(["X","X","X","X","X","X","X","X","X","X","X","X"], N).
+five_pins_hit_on_each_frame_of_all_ten_frames_test() ->
+    TenFrames = "32|32|32|32|32|32|32|32|32|32||",
+    Res = game:score(TenFrames),
+    ?assertEqual(50, Res).
 
-%% replace_symbols_and_convert_input_into_integers_test() ->
-%%     N = game:replace_symbol_to_int(["X","1","-","5","/","4"]),
-%%     ?assertEqual([10,1,0,5,5,4], N).
+nine_pins_hit_on_the_first_ball_of_all_ten_frames_test() ->
+    TenFrames = "9-|9-|9-|9-|9-|9-|9-|9-|9-|9-||",
+    Res = game:score(TenFrames),
+    ?assertEqual(90, Res).
 
+nine_pins_hit_on_the_second_ball_of_all_ten_frames_test() ->
+    TenFrames = "-9|-9|-9|-9|-9|-9|-9|-9|-9|-9||",
+    Res = game:score(TenFrames),
+    ?assertEqual(90, Res).
 
+five_pins_on_the_first_ball_of_all_ten_frames_test() ->
+    TenFrames = "5/|5/|5/|5/|5/|5/|5/|5/|5/|5/||5",
+    Res = game:score(TenFrames),
+    ?assertEqual(150, Res).
 
+ten_strikes_on_the_first_ball_of_all_ten_frames_test() ->
+    TenFrames = "X|X|X|X|X|X|X|X|X|X||XX",
+    Res = game:score(TenFrames),
+    ?assertEqual(300, Res).
+
+mix_of_spare_and_strike_test() ->
+    TenFrames = "5/|X|5/|X|5/|-/|X|-/|X|--||",
+    Res = game:score(TenFrames),
+    ?assertEqual(160, Res).

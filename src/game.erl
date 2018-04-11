@@ -1,18 +1,19 @@
 -module(game).
--export([calc_score/1,calc_score/2,inputformatter/1,replace_symbol_to_int/1,replace_symbol_to_int/2]).
+-export([score/1, calc_score/1,calc_score/2,inputformatter/1,replace_symbol_to_int/1,replace_symbol_to_int/2]).
+
+score(TenFrames) ->
+    Hits = inputformatter(TenFrames),
+    calc_score(Hits).
 
 calc_score(L) ->
     calc_score(L, 0).
 
 calc_score([], Score) -> 
     Score;
-
 calc_score([N], Score) -> 
     Score + N;
-
 calc_score([N, NN] , Score) -> 
     Score + N + NN;
-
 calc_score([N, NN, NNN | Tail] , Score) ->
     Diff=10-NN,
     case N of 
@@ -33,7 +34,6 @@ replace_symbol_to_int(L) ->
 
 replace_symbol_to_int([], L) ->
     lists:reverse(L);
-
 replace_symbol_to_int([H | T], L) ->
     case H of 
 	"X" ->
