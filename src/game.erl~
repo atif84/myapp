@@ -1,0 +1,10 @@
+-module(game).
+-export([calc_score/1]).
+
+calc_score(Str_score) ->
+    Str_score.
+
+inputformatter(In) ->
+    string:tokens(In, "|").
+
+
