@@ -6,7 +6,7 @@ create_new_robot_test() ->
     ?assertEqual({{6, 1}, north}, Robo).
 
 control_return_robot_when_instruction_is_empty_test() ->
-    Robo = robot:control({{6,1}, north}, []),
+    Robo = robot:control({{6,1}, north},[]),
     ?assertEqual({{6, 1}, north}, Robo).
 
 get_new_direction_from_proplist_test() ->
@@ -45,10 +45,6 @@ control_move_back_south_test() ->
     C = robot:move_backward({{-10, -5}, south}),
     ?assertEqual({-10, -4}, C).
 
-control_move_forward_AND_backward_test_control_test() ->
-    L = robot:control({{0, 6}, east}, "ffbr"),
-    ?assertEqual({{1, 6}, south}, L).
-
 control_return_robot_and_input_instuction_test() ->
     L = robot:control({{6, 1}, north}, "r"),
     ?assertEqual({{6,1}, east}, L).
@@ -61,6 +57,20 @@ control_return_robot_and_input_multiple_instuctions_with_space_test() ->
     L = robot:control({{0, 0}, north}, " rrll"),
     ?assertEqual({{0,0}, north}, L).
 
-control_return_robot_and_input_multiple_instuctions_rlfb_test() ->
-    L = robot:control({{0,0}, north}, "rrllffbff"),
-    ?assertEqual({{0, 3}, north}, L).
+control_return_robot_file_output_test() ->
+    L = robot:control({{0,0}, north}, "lrrflf"),
+    ?assertEqual({{1, 1}, north}, L).
+
+control_read_file_input_rf_test() ->
+    L = robot:control({{1, 0}, west}),
+    ?assertEqual({{1, 1}, north}, L).
+
+instruction_file_exist_test_() ->
+    { setup,
+      fun setup/0,
+      [fun control_return_robot_file_output_test/0,
+       fun control_read_file_input_rf_test/0]
+    }.
+
+setup() ->
+    robot:start().
