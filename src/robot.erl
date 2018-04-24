@@ -1,43 +1,43 @@
 -module(robot).
 
 -export([initialize/2,
-	 control/1,
 	 control/2,
-	 move_forward/1,
-	 move_backward/1,
-	 get_new_direction/2,
-	 read_file/0,
-	 start/0]).
+	 input_from_file/2]).
 
 initialize(C, D) ->
     {C, D}.
 
-control(R,Ins) ->
-    control(R, string:trim(Ins), string:trim(Ins), 1).
+input_from_file(R, File) ->
+    Ins = read_file(File),
+    control(R, string:trim(Ins)).
 
-control(R) ->
-    Ins = read_file(),
-    control(R, string:trim(Ins), string:trim(Ins), 1).
-
-control(R, _, [], _) ->
+control(R,[]) ->
     write_file(R),
     R;
 
-control(R, Ins, Substr, N) ->
-    I = string:slice(Substr, 0, 1),
+control(R, [I | Tail]) ->
     D = element(2, R),
     write_file(R),
     case I of I when
-	      I == "r" ; I == "l" ->
-	    control({element(1, R), get_new_direction(D, I)}, Ins, string:substr(Ins, N + 1, string:length(Ins)), N + 1);
-	"f" ->
-	    control({move_forward(R), D}, Ins, string:substr(Ins,N + 1, string:length(Ins)), N + 1);
-	"b" ->
-	    control({move_backward(R), D}, Ins, string:substr(Ins,N + 1, string:length(Ins)), N + 1)
+	      I == $r ; I == $l ->
+	    control({element(1, R), get_new_direction(D, I)}, Tail);
+	$f ->
+	    control({move_forward(R), D}, Tail);
+	$b ->
+	    control({move_backward(R), D}, Tail);
+	_ ->	
+	    control(R, Tail)	   
     end.
 
 get_new_direction(D, I) ->
-    L = [{{north, "r"}, east},{{south, "r"}, west}, {{west, "r"}, north},{{east, "r"}, south}, {{north, "l"},west}, {{south, "l"}, east},{{west, "l"}, south}, {{east, "l"}, north}],
+    L = [{{north, $r}, east},
+	 {{south, $r}, west},
+	 {{west, $r}, north},
+	 {{east, $r}, south}, 
+	 {{north, $l},west}, 
+	 {{south, $l}, east},
+	 {{west, $l}, south} ,
+	 {{east, $l}, north}],
     proplists:get_value({D, I}, L).
 
 move_forward({{X, Y}, D}) ->
@@ -64,10 +64,7 @@ write_file({{X,Y},D}) ->
     file:write(S,"\n"),
     file:write(S, print_match({0,0},{X,Y},D)),
     file:write(S, print_match({1,0},{X,Y},D)),
-    file:write(S,"\n"),
-    file:write(S, "------"),
-    file:write(S,"\n"),
-    file:close(S).
+    file:write(S,"\n").
 
 print_match(DrawingCoordinates, C, D) ->
     if 
@@ -75,16 +72,15 @@ print_match(DrawingCoordinates, C, D) ->
 	    string:concat(string:concat("[",io_lib:format("~p",[D])),"]"); 
 	true ->
 	    "[]"
-
     end.
 
-read_file() ->
+read_file(File_name) ->
     {ok, Dir} = file:get_cwd(),
-    {ok, File} = file:open(filename:join([Dir,"commands.txt"]),[read]),
-    {ok,Data} = file:read(File,1024 * 1024), 
-    string:trim(Data).
+    F = filename:join([Dir, File_name]),
+    case filelib:is_file(F) of
+	true ->
+	    {ok, File} = file:open(F, [read]),
+	    {ok,Data} = file:read(File, 1024 * 1024), 
+	    string:trim(Data)
 
-start() ->
-    {ok, Dir} = file:get_cwd(),
-    file:delete(filename:join([Dir,"states.txt"])).
-
+    end.

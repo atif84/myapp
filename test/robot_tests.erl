@@ -1,76 +1,67 @@
 -module(robot_tests).
 -include_lib("eunit/include/eunit.hrl").
 
-create_new_robot_test() ->
-    Robo = robot:initialize({6, 1}, north),
-    ?assertEqual({{6, 1}, north}, Robo).
+join_file_with_directory(F) ->
+    {ok, Dir} = file:get_cwd(),
+    filename:join([Dir, F]).
 
-control_return_robot_when_instruction_is_empty_test() ->
-    Robo = robot:control({{6,1}, north},[]),
-    ?assertEqual({{6, 1}, north}, Robo).
+readlines(FileName) ->
+    {ok, Dir} = file:get_cwd(),
+    F = filename:join([Dir, FileName]),
+    {ok, Data} = file:read_file(F),
+    L = binary:split(Data, [<<"\n">>], [global]),
+    lists:map(fun erlang:binary_to_list/1, L).
 
-get_new_direction_from_proplist_test() ->
-    L = robot:get_new_direction(west, "r"),
-    ?assertEqual(north, L).
+check_file_test_() ->
+    ?_assertEqual(true, commands_file_exsist()).
 
-control_move_forward_east_test() ->
-    C = robot:move_forward({{0, 6}, east}),
-    ?assertEqual({1, 6}, C).
+commands_file_exsist() ->
+    F=join_file_with_directory("commands.txt"),
+    filelib:is_file(F).
 
-control_move_forward_west_test() ->
-    C = robot:move_forward({{0, 0}, west}),
-    ?assertEqual({-1, 0},C).
+first_line_of_the_output_file_test() ->
+    robot:input_from_file({{0,0}, north}, "commands.txt"), 
+    F=join_file_with_directory("states.txt"),
+    L=readlines(F),
+    O=lists:nth(1, L),
+    ?assertEqual("[][]", O).   
 
-control_move_forward_north_test() ->
-    C = robot:move_forward({{0, 0}, north}),
-    ?assertEqual({0, 1}, C).
+second_line_of_the_output_file_test() ->
+    %% testing second line of the output from first_line_of_the_output_file_test()
+    F=join_file_with_directory("states.txt"),   
+    L=readlines(F),
+    O=lists:nth(2, L),
+    ?assertEqual("[north][]", O).  
 
-control_move_forward_south_test() ->
-    C = robot:move_forward({{0, 0}, south}),
-    ?assertEqual({0, -1}, C).
+second_last_line_of_the_output_file_test() ->
+    F=join_file_with_directory("states.txt"),
+    L=readlines(F),
+    O=lists:nth(length(L) - 2, L),
+    ?assertEqual("[][]", O).   
 
-control_move_backward_east_test() ->
-    C = robot:move_backward({{0, 6}, east}),
-    ?assertEqual({-1, 6}, C).
-
-control_move_backward_west_test() ->
-    C = robot:move_backward({{0, 0}, west}),
-    ?assertEqual({1, 0}, C).
-
-control_move_backward_north_test() ->
-    C = robot:move_backward({{0, 0}, north}),
-    ?assertEqual({0, -1}, C).
-
-control_move_back_south_test() ->
-    C = robot:move_backward({{-10, -5}, south}),
-    ?assertEqual({-10, -4}, C).
-
-control_return_robot_and_input_instuction_test() ->
-    L = robot:control({{6, 1}, north}, "r"),
-    ?assertEqual({{6,1}, east}, L).
-
-control_return_robot_and_input_multiple_instuctions_test() ->
-    L = robot:control({{0, 0}, north}, "rrll"),
-    ?assertEqual({{0, 0}, north}, L).
-
-control_return_robot_and_input_multiple_instuctions_with_space_test() ->
-    L = robot:control({{0, 0}, north}, " rrll"),
-    ?assertEqual({{0,0}, north}, L).
-
-control_return_robot_file_output_test() ->
-    L = robot:control({{0,0}, north}, "lrrflf"),
-    ?assertEqual({{1, 1}, north}, L).
-
-control_read_file_input_rf_test() ->
-    L = robot:control({{1, 0}, west}),
-    ?assertEqual({{1, 1}, north}, L).
-
-instruction_file_exist_test_() ->
-    { setup,
-      fun setup/0,
-      [fun control_return_robot_file_output_test/0,
-       fun control_read_file_input_rf_test/0]
-    }.
+last_line_of_the_output_file_test() ->
+    %% testing second line of the output from first_line_of_the_output_file_test()
+    F=join_file_with_directory("states.txt"),
+    L=readlines(F),
+    O=lists:nth(length(L) - 1, L),
+    ?assertEqual("[][east]", O). 
 
 setup() ->
-    robot:start().
+    F=join_file_with_directory("states.txt"),
+    {ok, File} = file:open(F, [append]),
+    File.
+
+cleanup(File) ->
+    file:close(File),
+    F=join_file_with_directory("states.txt"),
+    file:delete(F).
+
+start_final_positions_of_robot_test_cases_test_() ->
+    { setup,
+      fun setup/0,
+      fun cleanup/1,
+      [fun check_file_test_/0,
+       fun first_line_of_the_output_file_test/0,
+       fun second_line_of_the_output_file_test/0,
+       fun second_last_line_of_the_output_file_test/0,
+       fun last_line_of_the_output_file_test/0 ]}.
